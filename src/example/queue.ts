@@ -11,11 +11,16 @@ export const queue = makeQueue({
     redis: _ => new Redis(),
 
     drizzle: _ => makeDrizzleInstance(),
-    
+
     sentry: _ => null as any,
   },
 
   settings: {
+    retry: {
+      step: duration(2, 'seconds'),
+      max_attempts: 30
+    },
+
     polling_interval: duration(10, 'second'),
     load_window: duration(3, 'seconds'),
   },
@@ -28,7 +33,13 @@ export const queue = makeQueue({
 
     // eslint-disable-next-line @typescript-eslint/require-await
     async hmmm() {
-      console.error('* running hmmm() *'.repeat(10))      
+      console.error('* running hmmm() *'.repeat(10))
+    },
+
+    // eslint-disable-next-line @typescript-eslint/require-await
+    async shouldFail() {
+      throw new Error('fail')
     }
   }
 })
+
