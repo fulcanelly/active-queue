@@ -112,7 +112,7 @@ export function makeQueue<
       return jobs
     },
 
-    latter() {
+    later() {
       return new Proxy(jobs, {
         get: (_, jobName: string) => (jobArgs: any) => addJob({
           namespace,
