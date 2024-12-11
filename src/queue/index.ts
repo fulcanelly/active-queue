@@ -1,7 +1,7 @@
 import Redis from "ioredis"
 import { Duration } from "moment";
 import { parseJob } from "./parse-job";
-import { fetchJobsToExec } from "./fetch-jobs";
+import { fetchJobsToExec, fetchJobToRetry } from "./fetch-jobs";
 import { wrapJob } from "./job-service";
 import { addJob } from "./add-job";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
@@ -30,10 +30,11 @@ type Settings = {
   load_window: Duration
 
 
-  // retry: {
-  //   enabled: boolean,
-  //   max_attempts: undefined | number,
-  // }
+  retry: {
+    max_attempts: undefined | number,
+    step: Duration
+  }
+  | 'disabled'
 
 }
 
@@ -73,6 +74,40 @@ export function makeQueue<
   const redis = factories.redis()
   const db = factories.drizzle()
 
+  const poll = async () => {
+    console.error(' * [active queue] [polling] trying to load jobs')
+
+    const fetchParams = {
+      namespace, db,
+      load_window: settings.load_window.asMilliseconds(),
+    }
+
+    for await (const job of fetchJobsToExec(fetchParams)) {
+      prepareJobForExecution(job)
+    }
+  }
+
+
+  const pollFailed = async () => {
+    console.error(' * [active queue] [polling failed] trying to load failed jobs')
+
+    if (settings.retry === 'disabled') {
+      return
+    }
+
+    const fetchParams = {
+      namespace, db,
+
+      max_attempts: settings.retry.max_attempts,
+      retry_step: settings.retry.step.asMilliseconds()
+    }
+
+    for await (const job of fetchJobToRetry(fetchParams)) {
+      prepareJobForExecution(job)
+    }
+
+  }
+
   function prepareJobForExecution(job: JobEntry) {
     if (loadedJobs.has(job.id)) {
       return console.warn('ignoring already loaded job - ' + job.id)
@@ -99,6 +134,7 @@ export function makeQueue<
         await wrappedJob.markAsFailed()
       } finally {
         console.warn(` * [active queue] [done executing job] :: ${job.name}`)
+        loadedJobs.delete(job.id)
       }
     }
 
@@ -159,18 +195,11 @@ export function makeQueue<
 
       })
 
-      const poll = async () => {
-        console.error(' * [active queue] [polling] trying to load jobs')
+      if (settings.retry !== 'disabled') {
 
-        const fetchParams = {
-          namespace,
-          load_window: settings.load_window.asMilliseconds(),
-          db
-        }
-
-        for await (const job of fetchJobsToExec(fetchParams)) {
-          prepareJobForExecution(job)
-        }
+        void pollFailed()
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        setInterval(pollFailed, settings.retry.step.asMilliseconds())
       }
 
       void poll()
