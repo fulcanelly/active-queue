@@ -158,8 +158,7 @@ export function makeQueue<
 
       })
 
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      setInterval(async () => {
+      const poll = async () => {
         console.error(' * [active queue] [polling] trying to load jobs')
 
         const fetchParams = {
@@ -169,9 +168,13 @@ export function makeQueue<
         }
 
         for await (const job of fetchJobsToExec(fetchParams)) {
-          await prepareJobForExecution(job)
+          prepareJobForExecution(job)
         }
-      }, settings.polling_interval.asMilliseconds())
+      }
+
+      void poll()
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      setInterval(poll, settings.polling_interval.asMilliseconds())
 
     }
   }
