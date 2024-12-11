@@ -73,7 +73,7 @@ export function makeQueue<
   const redis = factories.redis()
   const db = factories.drizzle()
 
-  async function prepareJobForExecution(job: JobEntry) {
+  function prepareJobForExecution(job: JobEntry) {
     if (loadedJobs.has(job.id)) {
       return console.warn('ignoring already loaded job - ' + job.id)
     }
@@ -84,9 +84,9 @@ export function makeQueue<
     const delay = job.shouldRunAt - Date.now()
 
     console.warn({ delay })
-    // TODO what about setTimeout
+
     const callableJob = async () => {
-      await wrappedJob.markAsExecuting()//NO
+      await wrappedJob.markAsExecuting()
 
       console.warn(` * [active queue] [start executing job] :: ${job.name}`)
 
@@ -101,6 +101,7 @@ export function makeQueue<
       }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     const timeout = setTimeout(callableJob, delay)
     loadedJobs.set(job.id, timeout)
   }
@@ -145,17 +146,19 @@ export function makeQueue<
       const subredis = redis.duplicate()
       await subredis.subscribe(getChanKey(namespace))
 
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       subredis.on('message', async (channel, msg) => {
         console.warn({ channel, msg })
         const parsedMsg = JSON.parse(msg) as EnrollNotification
 
         if (parsedMsg.shouldRunAt < Date.now() + settings.load_window.asMilliseconds()) {
           const job = await wrapJob({ id: parsedMsg.id, db }).load()
-          await prepareJobForExecution(parseJob(job))
+          prepareJobForExecution(parseJob(job))
         }
 
       })
 
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       setInterval(async () => {
         console.error(' * [active queue] [polling] trying to load jobs')
 

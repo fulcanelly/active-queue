@@ -21,13 +21,14 @@ export const queue = makeQueue({
   },
 
   jobs: {
+    // eslint-disable-next-line @typescript-eslint/require-await
     async ok() {
       console.error('* running ok *'.repeat(10))
     },
 
+    // eslint-disable-next-line @typescript-eslint/require-await
     async hmmm() {
-      console.error('* running hmmm() *'.repeat(10))
-      // queue.latter().hmmm()
+      console.error('* running hmmm() *'.repeat(10))      
     }
   }
 })
