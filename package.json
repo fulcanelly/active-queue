@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "lint": "yarn eslint src/*",
+    "lint": "yarn eslint src/**/*.ts",
     "typecheck": "yarn tsc --noEmit src/test.ts"
   },
   "dependencies": {
