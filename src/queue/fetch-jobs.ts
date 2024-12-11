@@ -63,10 +63,6 @@ export async function* fetchJobToRetry({
       .from(queuedActiveJobTable)
 
   for (const job of await jobsToRetry) {
-    console.error("AAAA")
-    console.log(job.attempts * retry_step, 'ms')
-    console.log(duration(job.attempts * retry_step, 'ms').humanize())
-
     yield parseJob(job);
   }
 }
