@@ -95,6 +95,7 @@ export function makeQueue<
         await wrappedJob.markAsDone()
       } catch (e) {
         // TODO sentry
+        console.error(e)
         await wrappedJob.markAsFailed()
       } finally {
         console.warn(` * [active queue] [done executing job] :: ${job.name}`)
