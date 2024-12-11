@@ -28,6 +28,8 @@ export const queuedActiveJobTable = pgTable("QueuedActiveJob", {
 
   shouldRunAt: bigint({mode: 'number'}).notNull(),
 
+  attempts: bigint({mode: 'number'}).notNull().default(0),
+
   executedAt: bigint({ mode: 'number' }),
 
   updatedAt: bigint({ mode: 'number' }).notNull(),
