@@ -15,7 +15,7 @@
         "src/*"
       ] // Map src/ to root
     },
-    "incremental": true,
+    "incremental": false,
     "skipLibCheck": true,
     "strictNullChecks": true,
     "noImplicitAny": false,
