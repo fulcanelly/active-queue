@@ -6,6 +6,7 @@ import { wrapJob } from "./job-service";
 import { addJob } from "./add-job";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { SentryLike } from "../sentry-adapter";
+import { art } from "~@art";
 
 type NullValue = void | undefined | null
 
@@ -180,6 +181,7 @@ export function makeQueue<
     },
 
     async start() {
+      console.log(art)
       const subredis = redis.duplicate()
       await subredis.subscribe(getChanKey(namespace))
 
