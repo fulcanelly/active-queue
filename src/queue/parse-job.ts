@@ -1,6 +1,6 @@
-import { queuedActiveJobTable } from "schema";
 import superjson from "superjson";
 import { JobEntry } from ".";
+import { queuedActiveJobTable } from "~@schema";
 
 export function parseJob(job: typeof queuedActiveJobTable.$inferSelect): JobEntry {
   const args = superjson.parse(job.jobArgs);

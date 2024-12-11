@@ -11,7 +11,7 @@
     "outDir": "./dist",
     "baseUrl": "./", // Set base URL to project root
     "paths": {
-      "*": [
+      "~@*": [
         "src/*"
       ] // Map src/ to root
     },
@@ -22,5 +22,8 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false
-  }
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }

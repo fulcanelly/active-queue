@@ -1,7 +1,6 @@
 import { eq } from "drizzle-orm";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
-import { queuedActiveJobTable, QueuedActiveJobStatus } from "schema";
-
+import { QueuedActiveJobStatus, queuedActiveJobTable } from "~@schema";
 
 export function wrapJob({ id, db }: { id: number, db: NodePgDatabase }) {
   async function load() {

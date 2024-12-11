@@ -1738,6 +1738,11 @@ doctrine@^3.0.0:
   dependencies:
     esutils "^2.0.2"
 
+dotenv@^16.4.7:
+  version "16.4.7"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.4.7.tgz#0e20c5b82950140aa99be360a8a5f52335f53c26"
+  integrity sha512-47qPchRCykZC03FhkYAhrvwU4xDBFIj1QPqaarj6mdM/hgUzfPHcpkHJOn3mJAufFeeAxAzeGsr5X0M4k6fLZQ==
+
 drizzle-kit@^0.30.0:
   version "0.30.0"
   resolved "https://registry.yarnpkg.com/drizzle-kit/-/drizzle-kit-0.30.0.tgz#8ea3ff71f95c223c268c84e634b3f047b49b61bb"
