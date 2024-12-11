@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
-import { QueuedActiveJobStatus, queuedActiveJobTable } from "~@schema";
+import { queuedActiveJobTable } from "~@schema";
 
 export function wrapJob({ id, db }: { id: number, db: NodePgDatabase }) {
   async function load() {
@@ -12,30 +12,44 @@ export function wrapJob({ id, db }: { id: number, db: NodePgDatabase }) {
     return it[0]!;
   }
 
-  async function updateStaus(status: QueuedActiveJobStatus) {
-    await db.update(queuedActiveJobTable)
-      .set({
-        status,
-        executedAt: Date.now(),
-        updatedAt: Date.now(),
-      })
-      .where(
-        eq(queuedActiveJobTable.id, id)
-      );
-  }
-
   return {
     load,
-    markAsDone() {
-      return updateStaus('done');
+
+    async markAsDone() {
+      await db.update(queuedActiveJobTable)
+        .set({
+          status: 'done',
+          attempts: sql`attempts + 1`,
+          executedAt: Date.now(),
+          updatedAt: Date.now(),
+        })
+        .where(
+          eq(queuedActiveJobTable.id, id)
+        );
     },
 
-    markAsExecuting() {
-      return updateStaus('executing');
+    async markAsExecuting() {
+      await db.update(queuedActiveJobTable)
+        .set({
+          status: 'executing',
+          updatedAt: Date.now(),
+        })
+        .where(
+          eq(queuedActiveJobTable.id, id)
+        );
     },
 
-    markAsFailed() {
-      return updateStaus('failed');
+    async markAsFailed() {
+      await db.update(queuedActiveJobTable)
+        .set({
+          status: 'failed',
+          attempts: sql`attempts + 1`,
+          executedAt: Date.now(),
+          updatedAt: Date.now(),
+        })
+        .where(
+          eq(queuedActiveJobTable.id, id)
+        );
     },
   };
 }
