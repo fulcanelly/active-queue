@@ -15,6 +15,7 @@
         "src/*"
       ] // Map src/ to root
     },
+    "allowJs": true,
     "incremental": false,
     "skipLibCheck": true,
     "strictNullChecks": true,
