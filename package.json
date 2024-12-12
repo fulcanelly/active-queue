@@ -53,7 +53,7 @@
     "./schema": {
       "types": "./dist/schema.d.ts",
       "import": "./dist/schema.mjs",
-      "require": "./dist/schema.mjs"
+      "require": "./dist/schema.js"
     }
   }
 }
