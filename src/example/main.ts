@@ -5,10 +5,12 @@ async function test() {
   for (let i = 0; i < 100; i++) {
     await queue.in(duration(20, 'seconds')).hmmm()
   }
+
   for (let i = 0; i < 100; i++) {
-    await queue.latter().hmmm()
+    await queue.later().hmmm()
   }
 
+  await queue.later().shouldFail()
 }
 
 void test()

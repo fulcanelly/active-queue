@@ -4,9 +4,12 @@ import { parseJob } from "./parse-job";
 import { fetchJobsToExec, fetchJobToRetry } from "./fetch-jobs";
 import { wrapJob } from "./job-service";
 import { addJob } from "./add-job";
-import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { SentryLike } from "../sentry-adapter";
 import { art } from "~@art";
+import { makeDrizzleInstance } from "~@db";
+import { Pool } from "pg";
+import { drizzle } from 'drizzle-orm/node-postgres';
+
 
 type NullValue = void | undefined | null
 
@@ -40,10 +43,10 @@ type Settings = {
 }
 
 
-
+makeDrizzleInstance
 type Factories = {
   redis(any?): Redis
-  drizzle(any?): NodePgDatabase
+  pg(any?): Pool
   sentry(any?): SentryLike
 }
 
@@ -73,7 +76,7 @@ export function makeQueue<
   const loadedJobs = new Map<number, NodeJS.Timeout>()
 
   const redis = factories.redis()
-  const db = factories.drizzle()
+  const db = drizzle(factories.pg())
 
   const poll = async () => {
     console.error(' * [active queue] [polling] trying to load jobs')

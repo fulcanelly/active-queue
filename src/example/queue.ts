@@ -1,18 +1,21 @@
 import Redis from "ioredis"
 import { makeQueue } from "../queue/index"
-import { makeDrizzleInstance } from "../db"
 import { duration } from "moment"
+import { Pool } from "pg"
+import { sentryStub } from "~@sentry-adapter"
 
 
 export const queue = makeQueue({
-  namespace: 'testque',
+  namespace: 'test-queue',
 
   factories: {
     redis: _ => new Redis(),
 
-    drizzle: _ => makeDrizzleInstance(),
+    pg: _ => new Pool({
+      connectionString: process.env.DATABASE_URL!
+    }),
 
-    sentry: _ => null as any,
+    sentry: _ => sentryStub,
   },
 
   settings: {
