@@ -6,6 +6,18 @@
     "lint": "yarn eslint src/**/*.ts",
     "typecheck": "yarn tsc --noEmit src/test.ts"
   },
+  "keywords": [
+    "tasks",
+    "queue",
+    "jobs",
+    "redis",
+    "drizzle",
+    "pg"
+  ],
+  "repository": {
+    "url": "git@github.com:fulcanelly/active-queue.git",
+    "type": "git"
+  },
   "dependencies": {
     "drizzle-orm": "^0.36.4",
     "ioredis": "^5.4.1",
