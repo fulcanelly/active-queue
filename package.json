@@ -14,8 +14,9 @@
     "drizzle",
     "pg"
   ],
+  "homepage": "https://github.com/fulcanelly/active-queue#readme",
   "repository": {
-    "url": "git@github.com:fulcanelly/active-queue.git",
+    "url": "https://github.com/fulcanelly/active-queue",
     "type": "git"
   },
   "dependencies": {
