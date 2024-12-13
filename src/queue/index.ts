@@ -42,7 +42,6 @@ type Settings = {
 }
 
 
-makeDrizzleInstance
 type Factories = {
   redis(any?): Redis
   pg(any?): Pool
