@@ -41,6 +41,14 @@ type Settings = {
 
 }
 
+/// need this since executing jobs at startup mean 
+//- job queue process were interrupted / exited not gracefully
+// and this jobs were not done fully 
+
+// TODO maybe add `interrupted` :: status  
+function markExecutingJobsFailed() {
+
+}
 
 type Factories = {
   redis(any?): Redis
