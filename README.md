@@ -1,6 +1,6 @@
 # Active Queue
 
-Simple TypeScript-based task queue inspired by Active Job and Sidekiq.
+Simple TypeScript-based task queue inspired by tRPC, Active Job and Sidekiq.
 
 ![GitHub Tag](https://img.shields.io/github/v/tag/fulcanelly/active-queue)
 <a href="https://www.npmjs.com/package/active-queue"><img alt="NPM Downloads" src="https://img.shields.io/npm/dy/active-queue?link=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Factive-queue"></a>
@@ -30,6 +30,8 @@ yarn drizzle-kit generate & yarn drizzle-kit migrate
 
 `src/queue.config.ts`:
 ```ts
+export { makeQueue } from 'active-queue'
+
 export const queue = makeQueue({
   namespace: 'test-queue',
 
@@ -38,7 +40,7 @@ export const queue = makeQueue({
     pg: _ => new Pool({
       connectionString: process.env.DATABASE_URL!
     }),
-    sentry: _ => sentry, // you can also use sentryStub if you don't want it 
+    sentry: _ => sentry, // you can also use sentryStub if you don't want this 
   },
 
   settings: {
@@ -68,7 +70,7 @@ export const queue = makeQueue({
 
 `src/queue.start.ts`: 
 ```ts  
-import { queue } from "./queue";
+import { queue } from "./queue.config";
 
 void queue.start()
 ```
@@ -81,7 +83,7 @@ yarn tsx src/queue.start.ts
 
 ### 5. Use your jobs 
 ```ts
-import { queue } from "./queue";
+import { queue } from "@/queue.config";
 
 /// ... 
 
