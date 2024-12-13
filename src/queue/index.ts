@@ -32,6 +32,11 @@ type Settings = {
   polling_interval: Duration
   load_window: Duration
 
+  limits: {
+    // this settings mean no jobs would be added until certain number is executed
+    sheduled_jobs_max?: number
+    in_progress_jobs_max?: number
+  }
 
   retry: {
     max_attempts: undefined | number,
