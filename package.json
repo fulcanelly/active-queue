@@ -1,6 +1,6 @@
 {
   "name": "active-queue",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "license": "MIT",
   "scripts": {
     "lint": "yarn eslint src/**/*.ts",
