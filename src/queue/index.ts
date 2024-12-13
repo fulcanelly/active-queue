@@ -6,7 +6,6 @@ import { wrapJob } from "./job-service";
 import { addJob } from "./add-job";
 import { SentryLike } from "../sentry-adapter";
 import { art } from "~@art";
-import { makeDrizzleInstance } from "~@db";
 import { Pool } from "pg";
 import { drizzle } from 'drizzle-orm/node-postgres';
 
@@ -76,7 +75,7 @@ export function makeQueue<
   const loadedJobs = new Map<number, NodeJS.Timeout>()
 
   const redis = factories.redis()
-  const db = drizzle(factories.pg())
+  const db = drizzle(factories.pg(), { logger: true })
 
   const poll = async () => {
     console.error(' * [active queue] [polling] trying to load jobs')
