@@ -1,11 +1,12 @@
 # Active Queue
 
+Simple TypeScript-based task queue inspired by Active Job and Sidekiq.
+
 ![GitHub Tag](https://img.shields.io/github/v/tag/fulcanelly/active-queue)
 <a href="https://www.npmjs.com/package/active-queue"><img alt="NPM Downloads" src="https://img.shields.io/npm/dy/active-queue?link=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Factive-queue"></a>
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/fulcanelly/active-queue/linter.yml?branch=master)
 
 
-Simple TypeScript-based task queue inspired by Active Job and Sidekiq.
 
 
 ## Setup 
