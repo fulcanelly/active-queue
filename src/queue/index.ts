@@ -10,11 +10,8 @@ import { Pool } from "pg";
 import { drizzle } from 'drizzle-orm/node-postgres';
 
 
-type NullValue = void | undefined | null
+type NullValue = void | undefined | null | unknown
 
-type QueueJobs<J extends string, A> = {
-  [T in J]: (args: A) => Promise<NullValue> | NullValue
-}
 
 export function getChanKey(namespace: string) {
   return `:active-queue:${namespace}`
@@ -56,10 +53,17 @@ export type EnrollNotification = {
 }
 
 
+type QueueJobs = {
+  [T in string]: (args: any) => Promise<NullValue> | NullValue
+}
+
+type AsyncQueuedJobs<T extends QueueJobs> = {
+  [K in keyof T]: (args: Parameters<T[K]>[0]) => Promise<NullValue>
+}
+
+
 export function makeQueue<
-  N extends string,
-  A,
-  J extends QueueJobs<N, A>
+  J extends QueueJobs
 >({
   jobs,
   namespace,
@@ -162,7 +166,7 @@ export function makeQueue<
 
           redis, db,
         })
-      }) as J
+      }) as AsyncQueuedJobs<J>
     },
 
     in(duration: Duration) {
@@ -178,7 +182,7 @@ export function makeQueue<
 
           redis, db,
         })
-      }) as J
+      }) as AsyncQueuedJobs<J>
     },
 
     async start() {
