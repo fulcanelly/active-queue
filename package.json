@@ -58,11 +58,23 @@
     "./dist"
   ],
   "exports": {
-    "./*": "./dist/*"
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./schema": {
+      "import": "./dist/schema.mjs",
+      "require": "./dist/schema.js"
+    }
   },
   "typesVersions": {
     "*": {
-      "*": ["dist/*"]
+      ".": [
+        "./dist/index.d.ts"
+      ],
+      "schema": [
+        "dist/schema.d.ts"
+      ]
     }
   }
 }
